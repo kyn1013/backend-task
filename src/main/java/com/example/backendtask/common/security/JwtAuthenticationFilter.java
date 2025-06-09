@@ -70,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void setAuthentication(Claims claims) {
         String email = claims.getSubject();
 
-        List<String> roleList = claims.get("userRoles", List.class);
+        List<String> roleList = claims.get("userRole", List.class);
 
         List<UserRole> userRoles = roleList.stream()
                 .map(UserRole::of)
