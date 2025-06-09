@@ -21,6 +21,7 @@ public enum ErrorCode {
     UNAUTHORIZED_ROLE(HttpStatus.FORBIDDEN, "존재하지 않는 권한입니다."),
     EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 JWT 토큰입니다."),
     INVALID_JWT_SIGNATURE(HttpStatus.UNAUTHORIZED, "유효하지 않는 JWT 서명입니다."),
+    ACCESS_DENIED(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다."),
 
     // 회원가입 및 로그인 에러 코드
 
