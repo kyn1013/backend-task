@@ -39,6 +39,6 @@ out/
 ### mac ###
 .DS_Store
 
-### local properties ###
+### properties ###
 .yml
 .properties
