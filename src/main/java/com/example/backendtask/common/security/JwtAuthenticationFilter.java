@@ -1,7 +1,10 @@
 package com.example.backendtask.common.security;
 
+import com.example.backendtask.common.exception.constant.ErrorCode;
+import com.example.backendtask.common.response.ErrorResponse;
 import com.example.backendtask.domain.auth.dto.AuthUser;
 import com.example.backendtask.domain.user.enums.UserRole;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -41,15 +44,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             } catch (SecurityException | MalformedJwtException e) {
                 log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.", e);
+                setErrorResponse(httpResponse, ErrorCode.INVALID_JWT_SIGNATURE);
                 return;
             } catch (ExpiredJwtException e) {
                 log.error("Expired JWT token, 만료된 JWT token 입니다.", e);
+                setErrorResponse(httpResponse, ErrorCode.EXPIRED_JWT_TOKEN);
                 return;
             } catch (UnsupportedJwtException e) {
                 log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.", e);
+                setErrorResponse(httpResponse, ErrorCode.UNSUPPORTED_JWT_TOKEN);
                 return;
             } catch (Exception e) {
                 log.error("Internal server error, 서버 에러가 발생했습니다.", e);
+                setErrorResponse(httpResponse, ErrorCode.INTERNAL_SERVER_ERROR);
                 return;
             }
         }
@@ -64,5 +71,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         AuthUser authUser = new AuthUser(userId, email, userRole);
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(authUser);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+    }
+
+    private void setErrorResponse(HttpServletResponse response, ErrorCode code) throws IOException {
+        response.setStatus(code.getStatus().value());
+        response.setContentType("application/json;charset=UTF-8");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(ErrorResponse.of(code));
+        response.getWriter().write(json);
     }
 }
