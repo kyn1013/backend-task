@@ -7,17 +7,18 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 public class AuthUser {
 
-    private final Long userId;
     private final String email;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public AuthUser(Long userId, String email, UserRole role) {
-        this.userId = userId;
+    public AuthUser(String email, List<UserRole> roles) {
         this.email = email;
-        this.authorities = List.of(new SimpleGrantedAuthority(role.name()));
+        this.authorities = roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .toList();
     }
 }

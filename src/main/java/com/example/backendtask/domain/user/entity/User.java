@@ -8,7 +8,7 @@ import java.util.Set;
 @Getter
 public class User {
 
-    private String username;
+    private String email;
 
     private String password;
 
@@ -16,11 +16,15 @@ public class User {
 
     private Set<UserRole> userRoles = new HashSet<>();
 
-    public User(String username, String password, String nickName, UserRole userRole) {
-        this.username = username;
+    private User(String email, String password, String nickName, UserRole userRole) {
+        this.email = email;
         this.password = password;
         this.nickName = nickName;
         this.userRoles.add(userRole);
+    }
+
+    public static User of(String email, String password, String nickName, UserRole userRole) {
+        return new User(email, password, nickName, userRole);
     }
 
     /*

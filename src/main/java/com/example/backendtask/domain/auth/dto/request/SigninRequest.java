@@ -5,10 +5,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class SignupReqeust {
+public class SigninRequest {
 
     private String email;
+
     private String password;
-    private String nickName;
-    private String userRole;
 }

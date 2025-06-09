@@ -15,11 +15,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -64,11 +68,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthentication(Claims claims) {
-        Long userId = Long.valueOf(claims.getSubject());
-        String email = claims.get("email", String.class);
-        UserRole userRole = UserRole.of(claims.get("userRole", String.class));
+        String email = claims.getSubject();
 
-        AuthUser authUser = new AuthUser(userId, email, userRole);
+        List<String> roleList = claims.get("userRoles", List.class);
+
+        List<UserRole> userRoles = roleList.stream()
+                .map(UserRole::of)
+                .toList();
+
+        AuthUser authUser = new AuthUser(email, userRoles);
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(authUser);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }

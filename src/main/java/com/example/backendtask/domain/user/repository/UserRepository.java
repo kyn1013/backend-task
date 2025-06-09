@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,9 +19,15 @@ public class UserRepository {
         return user;
     }
 
-    public Boolean existByUsername(String username) {
+    public Optional<User> findByEmail(String email) {
         return userList.stream()
-                .anyMatch(user -> user.getUsername().equals(username));
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst();
+    }
+
+    public Boolean existByUsername(String email) {
+        return userList.stream()
+                .anyMatch(user -> user.getEmail().equals(email));
     }
 
     public List<User> selectAll() {

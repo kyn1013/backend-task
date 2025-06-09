@@ -14,6 +14,9 @@ import org.springframework.util.StringUtils;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -39,14 +42,17 @@ public class JwtUtil {
     /*
      * access 토큰 생성
      */
-    public String createAccessToken(Long userId, String email, UserRole userRole) {
+    public String createAccessToken(String email, Set<UserRole> userRoles) {
         Date date = new Date();
+
+        List<String> roles = userRoles.stream()
+                .map(UserRole::getUserRole)
+                .toList();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(String.valueOf(userId))
-                        .claim("email", email)
-                        .claim("userRole", userRole.getUserRole())
+                        .setSubject(email)
+                        .claim("userRole", roles)
                         .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
