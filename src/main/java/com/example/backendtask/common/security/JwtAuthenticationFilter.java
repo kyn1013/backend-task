@@ -35,6 +35,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = httpRequest.getHeader("Authorization");
 
+        if (authorizationHeader == null) {
+            log.error("JWT 토큰이 없습니다.");
+            setErrorResponse(httpResponse, ErrorCode.TOKEN_NOT_FOUND);
+            return;
+        }
+
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String jwt = jwtUtil.substringToken(authorizationHeader);
             try {
