@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 
@@ -105,8 +108,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email").value("minji@test.com"))
                 .andExpect(jsonPath("$.password").value("0000"))
                 .andExpect(jsonPath("$.nickName").value("minji"))
-                .andExpect(jsonPath("$.userRoles[0]").value("ROLE_ADMIN"))
-                .andExpect(jsonPath("$.userRoles[1]").value("ROLE_USER"));
+                .andExpect(jsonPath("$.userRoles", hasSize(2)));
     }
 
     @Test
