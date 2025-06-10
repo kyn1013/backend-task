@@ -19,7 +19,6 @@ public class UserController {
     /*
      * 모든 회원 정보 조회 (관리자만 가능)
      */
-    @Secured("ROLE_ADMIN")
     @GetMapping("/api/v1/admin/users")
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userService.findAll();
@@ -29,7 +28,6 @@ public class UserController {
     /*
      * 일반 회원에게 권한 부여 (관리자만 가능)
      */
-    @Secured("ROLE_ADMIN")
     @PatchMapping("/api/v1/admin/roles")
     public ResponseEntity<User> grantRole(@RequestBody RoleRequest roleRequest) {
         User user = userService.grantAdmin(roleRequest);
