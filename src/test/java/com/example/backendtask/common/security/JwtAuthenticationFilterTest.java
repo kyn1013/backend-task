@@ -22,6 +22,7 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,6 +50,24 @@ class JwtAuthenticationFilterTest {
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         filterChain = new MockFilterChain();
+    }
+
+    @Test
+    public void 인증이_필요한_API에_JWT가_있으면_필터를_통과하여_요청을_처리한다() throws ServletException, IOException {
+        // given
+        request.setRequestURI("/api/v1/admin/users");
+
+        String email = "kyn@test.com";
+        Set<UserRole> userRoles = Set.of(UserRole.ROLE_ADMIN);
+        String token = jwtUtil.createAccessToken(email, userRoles);
+        request.addHeader("Authorization", token);
+
+        // when
+        jwtAuthenticationFilter.doFilter(request, response, filterChain);
+
+        // then
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        assertNotNull(filterChain.getRequest());
     }
 
     @Test
