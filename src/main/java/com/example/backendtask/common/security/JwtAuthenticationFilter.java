@@ -29,7 +29,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    private static final List<String> WHITELIST = List.of("/api/v1/auth/signup", "/api/v1/auth/signin");
+    private static final List<String> WHITELIST = List.of(
+            "/api/v1/auth/signup",
+            "/api/v1/auth/signin",
+            "/v3/api-docs",
+            "/v3/api-docs/swagger-config",
+            "/v3/api-docs/",
+            "/swagger-ui.html",
+            "/swagger-ui/",
+            "/swagger-ui/index.html",
+            "/swagger-ui/favicon-32x32.png",
+            "/swagger-ui/swagger-ui.css",
+            "/swagger-ui/swagger-ui-bundle.js",
+            "/swagger-ui/swagger-ui-standalone-preset.js",
+            "/swagger-ui/index.html#/");
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpRequest,

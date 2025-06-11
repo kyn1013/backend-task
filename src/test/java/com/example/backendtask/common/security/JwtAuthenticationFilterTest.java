@@ -53,6 +53,26 @@ class JwtAuthenticationFilterTest {
     }
 
     @Test
+    public void 인증이_필요한_API에_JWT가_없으면_BAD_REQUEST_에러가_뜬다() throws ServletException, IOException {
+        // given
+        request.setRequestURI("/api/v1/admin/users");
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // when
+        jwtAuthenticationFilter.doFilter(request, response, filterChain);
+
+        // then
+        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
+
+        String responseBody = response.getContentAsString();
+        ErrorResponse error = objectMapper.readValue(responseBody, ErrorResponse.class);
+
+        assertEquals("TOKEN_NOT_FOUND", error.getName());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), error.getStatusCode());
+        assertEquals("JWT 토큰이 없습니다.", error.getMessage());
+    }
+
+    @Test
     public void 인증이_필요한_API에_JWT가_있으면_필터를_통과하여_요청을_처리한다() throws ServletException, IOException {
         // given
         request.setRequestURI("/api/v1/admin/users");
