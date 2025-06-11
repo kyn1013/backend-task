@@ -29,7 +29,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    private static final List<String> WHITELIST = List.of("/api/v1/auth/signup", "/api/v1/auth/signin");
+    private static final List<String> WHITELIST = List.of(
+            "/api/v1/auth/signup",
+            "/api/v1/auth/signin",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/configuration/ui",
+            "/configuration/security");
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpRequest,
@@ -40,11 +51,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         boolean isNotWhitelisted = WHITELIST.stream().noneMatch(uri::startsWith);
         String authorizationHeader = httpRequest.getHeader("Authorization");
 
-        if (authorizationHeader == null && isNotWhitelisted) {
-            log.error("JWT 토큰이 없습니다.");
-            setErrorResponse(httpResponse, ErrorCode.TOKEN_NOT_FOUND);
-            return;
-        }
+//        if (authorizationHeader == null && isNotWhitelisted) {
+//            log.error("JWT 토큰이 없습니다.");
+//            setErrorResponse(httpResponse, ErrorCode.TOKEN_NOT_FOUND);
+//            return;
+//        }
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String jwt = jwtUtil.substringToken(authorizationHeader);
