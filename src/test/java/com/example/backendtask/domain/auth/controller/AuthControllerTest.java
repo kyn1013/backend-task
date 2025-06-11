@@ -3,6 +3,7 @@ package com.example.backendtask.domain.auth.controller;
 import com.example.backendtask.common.exception.constant.ErrorCode;
 import com.example.backendtask.common.exception.object.ClientException;
 import com.example.backendtask.common.security.CustomAccessDeniedHandler;
+import com.example.backendtask.common.security.JwtAuthenticationFilter;
 import com.example.backendtask.common.security.JwtUtil;
 import com.example.backendtask.common.security.SecurityConfig;
 import com.example.backendtask.domain.auth.dto.request.SigninRequest;
@@ -35,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthController.class)
-@Import({SecurityConfig.class, JwtUtil.class})
+@Import({SecurityConfig.class, JwtAuthenticationFilter.class})
 class AuthControllerTest {
 
     @Autowired
