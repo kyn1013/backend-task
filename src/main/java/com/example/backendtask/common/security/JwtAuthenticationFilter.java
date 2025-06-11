@@ -29,13 +29,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
+    private static final List<String> WHITELIST = List.of("/api/v1/auth/signup", "/api/v1/auth/signin");
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpRequest,
                                     HttpServletResponse httpResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
+        // 필터에서 검증이 필요없는 경로는 제외
+        String uri = httpRequest.getRequestURI();
+        boolean isNotWhitelisted = WHITELIST.stream().noneMatch(uri::startsWith);
         String authorizationHeader = httpRequest.getHeader("Authorization");
 
-        if (authorizationHeader == null) {
+        if (authorizationHeader == null && isNotWhitelisted) {
             log.error("JWT 토큰이 없습니다.");
             setErrorResponse(httpResponse, ErrorCode.TOKEN_NOT_FOUND);
             return;
