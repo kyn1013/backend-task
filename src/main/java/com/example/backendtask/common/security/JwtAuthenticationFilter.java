@@ -33,14 +33,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/api/v1/auth/signup",
             "/api/v1/auth/signin",
             "/v3/api-docs",
-            "/v3/api-docs/**",
+            "/v3/api-docs/swagger-config",
+            "/v3/api-docs/",
             "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/webjars/**",
-            "/configuration/ui",
-            "/configuration/security");
+            "/swagger-ui/",
+            "/swagger-ui/index.html",
+            "/swagger-ui/favicon-32x32.png",
+            "/swagger-ui/swagger-ui.css",
+            "/swagger-ui/swagger-ui-bundle.js",
+            "/swagger-ui/swagger-ui-standalone-preset.js",
+            "/swagger-ui/index.html#/");
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpRequest,
@@ -51,11 +53,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         boolean isNotWhitelisted = WHITELIST.stream().noneMatch(uri::startsWith);
         String authorizationHeader = httpRequest.getHeader("Authorization");
 
-//        if (authorizationHeader == null && isNotWhitelisted) {
-//            log.error("JWT 토큰이 없습니다.");
-//            setErrorResponse(httpResponse, ErrorCode.TOKEN_NOT_FOUND);
-//            return;
-//        }
+        if (authorizationHeader == null && isNotWhitelisted) {
+            log.error("JWT 토큰이 없습니다.");
+            setErrorResponse(httpResponse, ErrorCode.TOKEN_NOT_FOUND);
+            return;
+        }
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String jwt = jwtUtil.substringToken(authorizationHeader);

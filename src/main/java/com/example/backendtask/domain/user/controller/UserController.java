@@ -1,11 +1,17 @@
 package com.example.backendtask.domain.user.controller;
 
+import com.example.backendtask.common.response.ErrorResponse;
+import com.example.backendtask.domain.auth.dto.response.SigninResponse;
 import com.example.backendtask.domain.user.dto.request.RoleRequest;
 import com.example.backendtask.domain.user.entity.User;
 import com.example.backendtask.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +41,38 @@ public class UserController {
                             in = ParameterIn.HEADER,
                             example = "Bearer eyJhbGciOiJIUzI1NiIsIn..."
                     )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "회원 정보 조회 성공",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "일반 회원이 호출하여 회원 정보 조회 실패",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "JWT 없이 요청하여 실패",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "유효하지 않은 JWT로 요청하여 실패",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "만료된 JWT로 요청하여 실패",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "지원되지 않는 JWT로 요청하여 실패",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    )
             })
     @GetMapping("/api/v1/admin/users")
     public ResponseEntity<List<User>> findAll() {
@@ -55,6 +93,38 @@ public class UserController {
                             required = true,
                             in = ParameterIn.HEADER,
                             example = "Bearer eyJhbGciOiJIUzI1NiIsIn..."
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "권한 부여 성공",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "일반 회원이 호출하여 권한 부여 실패",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "JWT 없이 요청하여 실패",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "유효하지 않은 JWT로 요청하여 실패",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "만료된 JWT로 요청하여 실패",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "지원되지 않는 JWT로 요청하여 실패",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
                     )
             })
     @PatchMapping("/api/v1/admin/roles")
