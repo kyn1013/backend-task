@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +34,8 @@ public class UserController {
      */
     @Operation(
             summary = "전체 회원 정보 조회",
-            description = "권한이 ADMIN인 유저만 실행할 수 있는 전체 회원 정보 조회",
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "인가에 필요한 JWT",
-                            required = true,
-                            in = ParameterIn.HEADER,
-                            example = "Bearer eyJhbGciOiJIUzI1NiIsIn..."
-                    )
-            },
+            description = "권한이 ADMIN인 유저만 실행할 수 있는 전체 회원 정보 조회, JWT를 Authorization 헤더에 입력 필요함",
+            security = {@SecurityRequirement(name = "bearerAuth")},
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -135,16 +128,8 @@ public class UserController {
      */
     @Operation(
             summary = "권한 부여",
-            description = "권한이 ADMIN인 유저가 다른 유저에게 추가적인 권한을 부여",
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "인가에 필요한 JWT",
-                            required = true,
-                            in = ParameterIn.HEADER,
-                            example = "Bearer eyJhbGciOiJIUzI1NiIsIn..."
-                    )
-            },
+            description = "권한이 ADMIN인 유저가 다른 유저에게 추가적인 권한을 부여, JWT를 Authorization 헤더에 입력 필요함",
+            security = {@SecurityRequirement(name = "Authorization")},
             responses = {
                     @ApiResponse(
                             responseCode = "200",
