@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.refEq;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -45,6 +46,9 @@ class UserControllerTest {
     @MockitoBean
     private UserService userService;
 
+    @MockitoBean
+    private JwtUtil jwtUtil;
+
     @Test
     public void 관리자가_모든_회원정보를_조회하는데_성공한다() throws Exception {
         // given
@@ -59,6 +63,7 @@ class UserControllerTest {
 
         // when & then
         mockMvc.perform(get("/api/v1/admin/users")
+                        .header("Authorization", "Bearer test-token")
                         .with(authentication(authenticationToken))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -76,6 +81,7 @@ class UserControllerTest {
 
         // when & then
         mockMvc.perform(get("/api/v1/admin/users")
+                        .header("Authorization", "Bearer test-token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(authentication(authenticationToken)))
                 .andExpect(status().isForbidden())
@@ -101,6 +107,7 @@ class UserControllerTest {
 
         // when & then
         mockMvc.perform(patch("/api/v1/admin/roles")
+                        .header("Authorization", "Bearer test-token")
                         .with(authentication(authenticationToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(roleRequest)))
@@ -123,6 +130,7 @@ class UserControllerTest {
 
         // when & then
         mockMvc.perform(patch("/api/v1/admin/roles")
+                        .header("Authorization", "Bearer test-token")
                         .with(authentication(authenticationToken))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(roleRequest)))
